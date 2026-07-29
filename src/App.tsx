@@ -42,6 +42,7 @@ import AutoCleanupDaemon from "./components/AutoCleanupDaemon";
 import { playCompilationSuccessSound } from "./utils/audioHelper";
 
 import FlowingBackground from "./components/FlowingBackground";
+import { generateThemeShades } from "./utils/colorUtils";
 
 interface ThemePreset {
   id: "classic" | "matrix" | "cyberpunk" | "nordic" | "warm-autumn";
@@ -251,29 +252,7 @@ export default function App() {
     const root = document.documentElement;
     localStorage.setItem("archweaver-accent", accentColor);
     
-    // Hex parsing safely and elegantly
-    const cleanHex = accentColor.startsWith("#") ? accentColor : `#${accentColor}`;
-    const r = parseInt(cleanHex.slice(1, 3), 16) || 34;
-    const g = parseInt(cleanHex.slice(3, 5), 16) || 211;
-    const b = parseInt(cleanHex.slice(5, 7), 16) || 238;
-    
-    const blend = (r1: number, g1: number, b1: number, r2: number, g2: number, b2: number, ratio: number) => {
-      return [
-        Math.round(r1 * (1 - ratio) + r2 * ratio),
-        Math.round(g1 * (1 - ratio) + g2 * ratio),
-        Math.round(b1 * (1 - ratio) + b2 * ratio),
-      ];
-    };
-
-    const toHex = ([r, g, b]: number[]) => {
-      return "#" + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
-    };
-
-    const rgbStr = `${r}, ${g}, ${b}`;
-    const shade300 = toHex(blend(r, g, b, 255, 255, 255, 0.4));
-    const shade400 = cleanHex;
-    const shade500 = toHex(blend(r, g, b, 0, 0, 0, 0.15));
-    const shade950 = toHex(blend(r, g, b, 0, 0, 0, 0.85));
+    const { rgbStr, shade300, shade400, shade500, shade950 } = generateThemeShades(accentColor);
 
     root.style.setProperty("--accent-rgb", rgbStr);
     root.style.setProperty("--accent-300", shade300);

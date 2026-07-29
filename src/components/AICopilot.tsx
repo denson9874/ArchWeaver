@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { SECURITY_AUDIT_PROMPT, BUILD_LOG_ANALYSIS_PROMPT, PKGBUILD_TEMPLATE_PROMPT } from "../constants/prompts";
 import { motion, AnimatePresence } from "motion/react";
 import { 
   Bot, Sparkles, Key, Check, Copy, Trash2, ShieldAlert, 
@@ -227,21 +228,21 @@ export default function AICopilot() {
 
   const runAudit = () => {
     if (!auditInput.trim()) return;
-    const sysPrompt = "You are an elite Arch Linux Security Auditor. Analyze the provided PKGBUILD script file for malicious scripts, unauthorized internet connections during packaging, obfuscated base64 instructions, custom user privilege escalations, or backdoor endpoints. Give a high-level summary, list any suspicious commands found, and rate the safety score (Clean, Caution, Suspicious, Dangerous). Use a clean monospace formatting layout.";
+    const sysPrompt = SECURITY_AUDIT_PROMPT;
     handleSendMessage(auditInput, sysPrompt, `Security Audit Request: PKGBUILD recipe analysis`);
     setAuditInput("");
   };
 
   const analyzeBuildLog = () => {
     if (!auditInput.trim()) return;
-    const sysPrompt = "You are an expert Arch Linux makepkg / GCC compiler troubleshooter. Analyze the following compilation standard output stderr error log. Find the exact failure reason (missing header files, incorrect library file formats, compiler environment variable conflicts, or syntax error in source). Suggest specific terminal command lines or missing packages required to resolve the bug so compilation succeeds.";
+    const sysPrompt = BUILD_LOG_ANALYSIS_PROMPT;
     handleSendMessage(auditInput, sysPrompt, "Compile Error Analysis: makepkg build log troubleshoot");
     setAuditInput("");
   };
 
   const generatePkgbuildTemplate = () => {
     if (!auditInput.trim()) return;
-    const sysPrompt = "You are a senior AUR maintainer. Generate a standard, fully compliant Pacman PKGBUILD configuration template file based on the requested software metadata descriptions, binary links, or libraries. Format it beautiful with standard fields, verify checksum blocks, and structure prep/build/package clauses clearly.";
+    const sysPrompt = PKGBUILD_TEMPLATE_PROMPT;
     handleSendMessage(auditInput, sysPrompt, `PKGBUILD Template Request for "${auditInput}"`);
     setAuditInput("");
   };
